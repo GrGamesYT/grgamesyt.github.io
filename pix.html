@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Apoiar o GR 💜</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f0f0f;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .box {
+      width: 100%;
+      max-width: 420px;
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 78, 205, 0.4);
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      color: #ff4ecd;
+    }
+
+    p {
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    .pix {
+      background: #0f0f0f;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 20px 0;
+      font-size: 18px;
+      word-break: break-all;
+      border: 2px dashed #ff4ecd;
+    }
+
+    button {
+      background: linear-gradient(135deg, #8a2be2, #ff4ecd);
+      border: none;
+      padding: 14px;
+      width: 100%;
+      border-radius: 14px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    a {
+      display: block;
+      margin-top: 18px;
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <h1>💜 APOIE O GR</h1>
+
+    <p>
+      Curte meu conteúdo e quer fortalecer o canal?<br>
+      Seu apoio ajuda a manter as lives, melhorar o setup e trazer mais eventos com inscritos 🔥🎮<br><br>
+      Qualquer valor já faz a diferença!
+    </p>
+
+    <div class="pix" id="pix">
+      grgamesyt1@gmail.com
+    </div>
+
+    <button onclick="copiarPix()">📋 Copiar chave PIX</button>
+
+    <p style="margin-top:15px;">
+      😀 Muito obrigado pelo apoio, você é parte da tropa do GR!<br>
+      💡 As doações são usadas para melhorar as lives, sorteios e conteúdos para a comunidade.
+    </p>
+
+    <a href="index.html">⬅ Voltar ao site</a>
+  </div>
+
+  <script>
+    function copiarPix() {
+      navigator.clipboard.writeText("grgamesyt1@gmail.com");
+      alert("Chave PIX copiada! 💜");
+    }
+  </script>
+</body>
+</html>
