@@ -12,13 +12,29 @@
     body {
       margin: 0;
       padding: 0;
-      background: #0f0f0f;
+      background: linear-gradient(180deg, #0b0b0b, #111827);
       font-family: Arial, sans-serif;
       color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* FUNDO SUTIL GAMER */
+    body::before {
+      content: "👑 🎮 ⚡ 🟦 ⚔️ 🧱";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      font-size: 120px;
+      letter-spacing: 40px;
+      opacity: 0.05;
+      white-space: nowrap;
+      pointer-events: none;
     }
 
     .container {
@@ -26,6 +42,8 @@
       max-width: 420px;
       padding: 20px;
       text-align: center;
+      position: relative;
+      z-index: 2;
     }
 
     .profile-img {
@@ -33,7 +51,8 @@
       height: 140px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid #ffcc00;
+      border: 4px solid #facc15;
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.6);
       margin-bottom: 15px;
     }
 
@@ -44,7 +63,7 @@
 
     p {
       margin-bottom: 25px;
-      color: #ccc;
+      color: #cbd5e1;
     }
 
     .link {
@@ -52,7 +71,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: #1f1f1f;
+      background: #1f2933;
       margin: 12px 0;
       padding: 14px;
       border-radius: 14px;
@@ -60,32 +79,23 @@
       color: white;
       font-size: 16px;
       transition: 0.3s;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
     .link:hover {
-      background: #333;
-      transform: scale(1.04);
+      transform: scale(1.05);
+      background: #334155;
     }
 
     .discord {
-      background: #5865F2;
+      background: linear-gradient(135deg, #5865F2, #3b44c3);
       font-weight: bold;
     }
 
-    .discord:hover {
-      background: #4752c4;
-    }
-
-    /* BOTÃO APOIAR */
     .apoiar {
-      background: linear-gradient(135deg, #8a2be2, #ff4ecd);
+      background: linear-gradient(135deg, #2563eb, #9333ea);
       font-weight: bold;
-      box-shadow: 0 0 15px rgba(255, 78, 205, 0.6);
-    }
-
-    .apoiar:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 25px rgba(255, 78, 205, 0.9);
+      box-shadow: 0 0 18px rgba(147, 51, 234, 0.6);
     }
 
     .icons {
@@ -116,16 +126,12 @@
 <body>
   <div class="container">
 
-    <!-- FOTO -->
     <img src="perfil.jpg.png" alt="Foto de perfil" class="profile-img">
 
-    <!-- NOME -->
-    <h1>Gr Games 🎮🥇</h1>
+    <h1>Gr Games 🎮👑</h1>
 
-    <!-- DESCRIÇÃO -->
-    <p>Conteúdo de Jogos & Anime 🔥</p>
+    <p>Clash Royale • Roblox • Minecraft • Anime 🔥</p>
 
-    <!-- LINKS -->
     <a class="link" href="https://www.youtube.com/@grgamessyt" target="_blank">
       <i class="fa-brands fa-youtube youtube"></i> YouTube
     </a>
@@ -142,16 +148,14 @@
       <i class="fa-brands fa-twitch twitch"></i> Twitch
     </a>
 
-    <a class="link discord" href="https://discord.gg/NhshpYJ3" target="_blank">
+    <a class="link discord" href="https://discord.gg/5qTruBuXmJ" target="_blank">
       <i class="fa-brands fa-discord"></i> Discord (Comunidade)
     </a>
 
-    <!-- BOTÃO APOIAR -->
     <a class="link apoiar" href="pix.html">
       💜 APOIAR O GR
     </a>
 
-    <!-- ICONES -->
     <div class="icons">
       <a href="https://www.youtube.com/@grgamessyt" target="_blank" class="youtube">
         <i class="fa-brands fa-youtube"></i>
@@ -165,7 +169,7 @@
       <a href="https://www.twitch.tv/gr_games_yt" target="_blank" class="twitch">
         <i class="fa-brands fa-twitch"></i>
       </a>
-      <a href="https://discord.gg/NhshpYJ3" target="_blank" class="discord-icon">
+      <a href="https://discord.gg/5qTruBuXmJ" target="_blank" class="discord-icon">
         <i class="fa-brands fa-discord"></i>
       </a>
     </div>
