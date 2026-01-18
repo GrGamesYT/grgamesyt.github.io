@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorteio 10K - GR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #0b0b0b, #111827);
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 700px;
+      padding: 25px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #facc15;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #cbd5e1;
+      margin-bottom: 30px;
+    }
+
+    .box {
+      background: #1f2933;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .box h2 {
+      color: #facc15;
+      margin-bottom: 15px;
+    }
+
+    .rules p {
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+
+    .rules a {
+      color: #38bdf8;
+      word-break: break-word;
+    }
+
+    .alert {
+      font-size: 14px;
+      color: #cbd5e1;
+      margin-top: 10px;
+    }
+
+    .confirm {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .confirm label {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .confirm input {
+      margin-right: 8px;
+      transform: scale(1.2);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #facc15, #f59e0b);
+      color: #000;
+      padding: 16px 32px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.8);
+      transition: 0.3s;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .btn.active {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #94a3b8;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>✨ SORTEIO 10K – REGRAS OFICIAIS ✨</h1>
+    <p class="subtitle">
+      Sorteio de <strong>R$25 no PIX</strong> para comemorar os 10.000 seguidores do GR 🎉
+    </p>
+
+    <div class="box rules">
+      <h2>📋 Regras para participar</h2>
+
+      <p>✔ Seguir todas as redes sociais mencionadas no site</p>
+
+      <p>✔ Estar com <strong>Heath-me ativo no TikTok</strong><br>
+      <small>(membro da live, mandando coração ou moedas)</small></p>
+
+      <p>✔ Comentar <strong>“Sorteio do GR”</strong>:</p>
+
+      <p>
+        👉 No vídeo do sorteio no TikTok:<br>
+        <a href="https://www.tiktok.com/@gr_games_yt/video/7596762565770792203" target="_blank">
+          https://www.tiktok.com/@gr_games_yt/video/7596762565770792203
+        </a>
+      </p>
+
+      <p>
+        👉 No vídeo do sorteio no YouTube:<br>
+        <a href="https://youtube.com/shorts/5qNITkP6aPI" target="_blank">
+          https://youtube.com/shorts/5qNITkP6aPI
+        </a>
+      </p>
+
+      <p>✔ Preencher corretamente o formulário com seus dados</p>
+    </div>
+
+    <div class="box">
+      <h2>⏰ Informações importantes</h2>
+      <p>• O sorteio será realizado após atingir <strong>10K seguidores</strong></p>
+      <p>• O ganhador terá até <strong>24 horas</strong> para comprovar que cumpriu todas as regras</p>
+      <p>• Caso não cumpra, outro participante será sorteado</p>
+    </div>
+
+    <div class="confirm">
+      <label>
+        <input type="checkbox" id="agree">
+        Li e concordo com todas as regras do sorteio
+      </label>
+
+      <a id="continueBtn"
+         href="https://docs.google.com/forms/d/e/1FAIpQLSfKmBybZp5cdhl8RzE4a7i6npUAE463wroEckZVPim5TQqSuQ/viewform"
+         target="_blank"
+         class="btn">
+        CONCORDAR E CONTINUAR
+      </a>
+    </div>
+
+    <div class="footer">
+      Este sorteio não é patrocinado, administrado ou associado ao TikTok, YouTube, Instagram, Twitch ou Discord.
+    </div>
+
+  </div>
+
+  <script>
+    const checkbox = document.getElementById("agree");
+    const button = document.getElementById("continueBtn");
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        button.classList.add("active");
+      } else {
+        button.classList.remove("active");
+      }
+    });
+  </script>
+
+</body>
+</html>
