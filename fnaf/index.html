@@ -3,223 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GR FNAF 2 - PRO EDITION</title>
+    <title>GR FNAF 2 - REBORN</title>
     <style>
-        :root { --fnaf-red: #4a0000; --monitor-bg: rgba(0, 20, 0, 0.9); }
-        body { background: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; }
+        :root { --fnaf-red: #600; --gui-green: #0f0; }
+        body { background: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; user-select: none; }
 
-        /* JANELA DO JOGO */
-        #viewport { width: 100vw; height: 100vh; position: relative; overflow: hidden; cursor: none; }
-
-        /* SALA PANORÂMICA (Mais larga que a tela para poder girar) */
+        /* AMBIENTE */
+        #viewport { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+        
         #office-wrapper { 
-            width: 150vw; height: 100vh; position: absolute; left: -25vw; 
+            width: 160vw; height: 100vh; position: absolute; left: -30vw; 
+            background: radial-gradient(circle at center, #111 0%, #000 70%);
             display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(to bottom, #0a0a0a, #000);
             transition: transform 0.1s ease-out;
         }
 
-        /* PAREDE CENTRAL (CORREDOR DO FOXY) */
-        .wall-center { width: 600px; height: 500px; background: #050505; border: 15px solid #111; 
-                       box-shadow: inset 0 0 150px #000; display: flex; justify-content: center; align-items: flex-end; position: relative; }
+        /* CORREDOR CENTRAL */
+        .hallway { width: 500px; height: 450px; background: #050505; border: 12px solid #111; 
+                   box-shadow: inset 0 0 100px #000; position: relative; display: flex; justify-content: center; align-items: flex-end; overflow: hidden;}
+
+        /* FOXY (LÓGICA DE DISTÂNCIA) */
+        #foxy { 
+            width: 350px; height: auto; position: absolute; bottom: -20px;
+            filter: brightness(0); transform: scale(0.1); /* Começa bem pequeno */
+            transition: transform 0.3s ease-out, filter 0.1s; z-index: 5;
+        }
 
         /* DUTOS LATERAIS */
-        .vent { width: 250px; height: 350px; background: #030303; border: 8px solid #111; position: absolute; bottom: 100px; }
-        .vent-left { left: 50px; border-radius: 50px 50px 0 0; }
-        .vent-right { right: 50px; border-radius: 50px 50px 0 0; }
+        .vent { width: 220px; height: 300px; background: #020202; border: 6px solid #151515; position: absolute; bottom: 120px; border-radius: 40px 40px 0 0; }
+        .vent-l { left: 80px; } .vent-r { right: 80px; }
 
-        /* MESA E MONITOR NO MEIO */
-        #desk { position: absolute; bottom: 0; width: 800px; height: 200px; background: #1a1a1a; 
-                border-top: 10px solid #222; z-index: 50; box-shadow: 0 -20px 50px #000; }
+        #bonnie-vent { width: 200px; position: absolute; bottom: 100px; right: 80px; display: none; z-index: 40; }
 
-        /* INIMIGOS COM TAMANHO CONTROLADO */
-        #foxy { width: 300px; height: auto; position: absolute; bottom: 0; display: block; 
-                filter: brightness(0); transition: filter 0.1s, transform 0.5s ease-in; z-index: 5; }
-        
-        #bonnie-vent { 
-            width: 100px; height: auto; position: absolute; bottom: 50px; right: 120px; 
-            display: none; transition: all 0.5s ease-out; z-index: 45; opacity: 0.5;
-        }
-
-        /* EFEITOS DE MÁSCARA (Ajustado com os buracos de visão) */
+        /* MÁSCARA (SISTEMA DE CAMADAS) */
         #mask-layer { 
             position: absolute; top: -100%; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at 35% 50%, transparent 12%, #000 20%), 
-                        radial-gradient(circle at 65% 50%, transparent 12%, #000 20%);
-            z-index: 100; transition: top 0.2s; pointer-events: none; opacity: 0.95;
+            background: radial-gradient(circle at 30% 50%, transparent 10%, #000 25%), 
+                        radial-gradient(circle at 70% 50%, transparent 10%, #000 25%);
+            z-index: 200; transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
         }
+
+        /* MONITOR DE CÂMERAS */
+        #monitor-screen { 
+            position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 150; transition: bottom 0.3s;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .static { position: absolute; width: 100%; height: 100%; background: url('https://media.giphy.com/media/oEI9uWUznW3pS/giphy.gif'); opacity: 0.1; pointer-events: none; }
+        #cam-view { width: 80%; height: 70%; border: 2px solid var(--gui-green); background: #050505; position: relative; }
 
         /* LANTERNA */
         #flashlight { 
-            position: absolute; width: 400px; height: 400px; 
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            border-radius: 50%; pointer-events: none; z-index: 80; opacity: 0; mix-blend-mode: screen;
+            position: absolute; width: 500px; height: 500px; 
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: 100; opacity: 0; mix-blend-mode: screen;
         }
 
         /* UI */
-        .hud { position: absolute; top: 20px; right: 30px; z-index: 110; text-align: right; }
-        .btn-ui { position: absolute; bottom: 20px; width: 300px; height: 60px; background: rgba(50,50,50,0.4); 
-                  border: 2px solid #444; color: #fff; display: flex; align-items: center; justify-content: center; z-index: 120; cursor: pointer; }
+        .ui-panel { position: absolute; top: 20px; right: 30px; z-index: 210; text-align: right; }
+        .battery-bar { width: 120px; height: 15px; border: 2px solid #fff; margin-top: 5px; }
+        #battery-fill { width: 100%; height: 100%; background: var(--gui-green); transition: width 0.3s; }
 
-        /* JUMPSCARE */
-        #jumpscare { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; 
-                     z-index: 1000; display: none; justify-content: center; align-items: center; }
-        #jumpscare img { width: 100%; height: 100%; object-fit: cover; animation: shake 0.05s infinite; }
+        /* BOTÕES */
+        .footer-btns { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-around; z-index: 220; }
+        .btn { padding: 15px 40px; background: rgba(30,30,30,0.8); border: 2px solid #555; color: #fff; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #444; }
 
-        @keyframes shake { 0% { transform: translate(5px, 5px); } 50% { transform: translate(-5px, -5px); } }
-        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.02); opacity: 1; } }
+        #jumpscare { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; display: none; }
+        #jumpscare img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
 <div id="start-screen" style="position:fixed; width:100%; height:100%; background:#000; z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-    <h1 style="color:red; font-size:3rem;">GR FNAF 2: PRO</h1>
-    <button onclick="startGame()" style="padding:20px 60px; background:red; color:white; border:none; cursor:pointer;">INICIAR NOITE</button>
+    <h1 style="color:red; font-size:3rem; text-shadow: 0 0 20px red;">GR FNAF 2</h1>
+    <button onclick="startGame()" style="padding:20px 60px; background:#200; color:red; border:2px solid red; cursor:pointer; font-weight:bold;">VIGIAR NOITE</button>
 </div>
 
-<div id="viewport" onmousemove="handleInput(event)">
+<div id="viewport" onmousemove="moveOffice(event)">
     <div id="flashlight"></div>
     
     <div id="office-wrapper">
-        <div class="vent vent-left"></div>
-        
-        <div class="wall-center">
+        <div class="vent vent-l"></div>
+        <div class="hallway">
             <img id="foxy" src="img/foxy.png">
         </div>
-
+        <div class="vent vent-r"></div>
         <img id="bonnie-vent" src="img/bonnie.png">
-        <div class="vent vent-right"></div>
-        
-        <div id="desk"></div>
     </div>
 
     <div id="mask-layer"></div>
 
-    <div class="hud">
-        <div id="clock" style="font-size:2rem;">12:00 AM</div>
-        <div style="width:100px; height:10px; border:1px solid #fff; margin-top:5px;">
-            <div id="battery" style="width:100%; height:100%; background:#0f0;"></div>
-        </div>
+    <div id="monitor-screen">
+        <div class="static"></div>
+        <h2 style="color:var(--gui-green); position:absolute; top:20px; left:50px;">CAM 01 - AREA EXTERNA</h2>
+        <div id="cam-view"></div>
+        <button class="btn" style="margin-top:20px;" onclick="toggleMonitor()">FECHAR MONITOR</button>
+    </div>
+
+    <div class="ui-panel">
+        <div id="clock" style="font-size:2.5rem;">12:00 AM</div>
+        <div class="battery-bar"><div id="battery-fill"></div></div>
+    </div>
+
+    <div class="footer-btns">
+        <div class="btn" onclick="toggleMask()">MÁSCARA (M)</div>
+        <div class="btn" onclick="toggleMonitor()">MONITOR (TAB)</div>
     </div>
 
     <div id="jumpscare"><img src="img/susto.gif"></div>
-
-    <div style="left: 50px;" class="btn-ui" onmouseover="toggleMask()">MÁSCARA (M)</div>
-    <div style="right: 50px;" class="btn-ui" onclick="toggleMonitor()">MONITOR (TAB)</div>
 </div>
 
 <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let state = { active: false, foxyPos: 0, bonniePos: 0, battery: 100, mask: false, light: false, time: 0 };
-    let breathingInterval;
-
-    // RESPIRAÇÃO REALISTA (Via Código)
-    function playBreathing(active) {
-        if(active) {
-            breathingInterval = setInterval(() => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(60, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.5);
-                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + 1.2);
-            }, 2000);
-        } else { clearInterval(breathingInterval); }
-    }
+    let game = { active: false, foxyDist: 0, battery: 100, mask: false, mon: false, light: false, time: 0 };
 
     function startGame() {
         document.getElementById('start-screen').style.display = 'none';
-        state.active = true;
+        game.active = true;
         if(audioCtx.state === 'suspended') audioCtx.resume();
         
-        setInterval(() => {
-            if(!state.active) return;
-            gameLoop();
-        }, 1000);
+        setInterval(loop, 1000);
     }
 
-    function gameLoop() {
-        state.time++;
-        state.battery -= (state.light ? 0.4 : 0.1);
+    function loop() {
+        if(!game.active) return;
+        game.time++;
+        game.battery -= (game.light ? 0.5 : 0.1);
         updateUI();
 
-        // LÓGICA DO FOXY (O mestre do corredor)
-        if(Math.random() > 0.5) state.foxyPos += 10; // Avança
-        
+        // LÓGICA DO FOXY
         const foxyEl = document.getElementById('foxy');
-        foxyEl.style.transform = `scale(${1 + state.foxyPos/100})`;
         
-        if(state.light && state.foxyPos > 0) {
-            state.foxyPos -= 15; // Recua com a luz
+        if(game.light) {
+            // Se a luz estiver ligada, ele recua MUITO (distância diminui)
+            if(game.foxyDist > 0) game.foxyDist -= 15; 
+        } else {
+            // No escuro ele avança
+            if(Math.random() > 0.4) game.foxyDist += 8;
         }
 
-        if(state.foxyPos > 150) die(); // Foxy pulou!
+        // Limita a distância mínima em 0
+        if(game.foxyDist < 0) game.foxyDist = 0;
 
-        // LÓGICA DO BONNIE (Saindo do duto direito)
-        if(state.time % 20 === 0) state.bonniePos = 1;
-        
-        const bonnie = document.getElementById('bonnie-vent');
-        if(state.bonniePos === 1) {
-            bonnie.style.display = 'block';
-            bonnie.style.width = "250px"; // Ele cresce
-            bonnie.style.right = "50px";  // Ele sai do duto
-            bonnie.style.opacity = "1";
-            
-            setTimeout(() => {
-                if(!state.mask && state.bonniePos === 1) die();
-                else { state.bonniePos = 0; bonnie.style.display = 'none'; }
-            }, 4000);
-        }
+        // Aplica o tamanho baseado na distância (0 a 100)
+        // Escala vai de 0.1 (longe) até 1.5 (na sua cara)
+        let scaleVal = 0.1 + (game.foxyDist / 80);
+        foxyEl.style.transform = `scale(${scaleVal})`;
+
+        if(game.foxyDist > 110) die(); // ATAQUE!
     }
 
-    function handleInput(e) {
-        if(!state.active) return;
-        
-        // MOVIMENTAÇÃO DA VISÃO (PAN)
-        const percentX = e.clientX / window.innerWidth;
-        const moveX = (percentX * 50) - 25; // Move entre -25vw e 25vw
+    function moveOffice(e) {
+        if(!game.active || game.mon) return;
+        const rect = document.getElementById('viewport').getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // PANORAMA
+        const moveX = (e.clientX / window.innerWidth) * 40 - 20; 
         document.getElementById('office-wrapper').style.transform = `translateX(${-moveX}vw)`;
 
-        // POSIÇÃO DA LANTERNA
+        // LANTERNA SEGUE MOUSE
         const flash = document.getElementById('flashlight');
-        flash.style.left = (e.clientX - 200) + 'px';
-        flash.style.top = (e.clientY - 200) + 'px';
+        flash.style.left = (e.clientX - 250) + 'px';
+        flash.style.top = (e.clientY - 250) + 'px';
     }
 
     function toggleMask() {
-        state.mask = !state.mask;
-        document.getElementById('mask-layer').style.top = state.mask ? '0' : '-100%';
-        playBreathing(state.mask);
+        if(game.mon) return; // Não pode por máscara com monitor aberto
+        game.mask = !game.mask;
+        document.getElementById('mask-layer').style.top = game.mask ? '0' : '-100%';
+        if(game.mask) playSound(120, 0.5);
     }
 
+    function toggleMonitor() {
+        if(game.mask) return; // Não pode abrir monitor de máscara
+        game.mon = !game.mon;
+        document.getElementById('monitor-screen').style.bottom = game.mon ? '0' : '-100%';
+        playSound(600, 0.1);
+    }
+
+    // TECLAS
     window.onkeydown = (e) => {
         if(e.code === 'Space') {
-            state.light = true;
+            game.light = true;
             document.getElementById('flashlight').style.opacity = 1;
             document.getElementById('foxy').style.filter = "brightness(1)";
         }
+        if(e.key.toLowerCase() === 'm') toggleMask();
+        if(e.code === 'Tab') { e.preventDefault(); toggleMonitor(); }
     };
+
     window.onkeyup = (e) => {
         if(e.code === 'Space') {
-            state.light = false;
+            game.light = false;
             document.getElementById('flashlight').style.opacity = 0;
             document.getElementById('foxy').style.filter = "brightness(0)";
         }
     };
 
     function updateUI() {
-        let h = Math.floor(state.time / 60);
+        let h = Math.floor(game.time / 60);
         document.getElementById('clock').innerText = (h === 0 ? 12 : h) + ":00 AM";
-        document.getElementById('battery').style.width = state.battery + "%";
-        if(state.battery <= 0) die();
+        document.getElementById('battery-fill').style.width = game.battery + "%";
+        if(game.battery <= 0) die();
+    }
+
+    function playSound(f, d) {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.frequency.value = f;
+        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + d);
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + d);
     }
 
     function die() {
-        state.active = false;
-        document.getElementById('jumpscare').style.display = 'flex';
+        game.active = false;
+        document.getElementById('jumpscare').style.display = 'block';
         setTimeout(() => location.reload(), 3000);
     }
 </script>
