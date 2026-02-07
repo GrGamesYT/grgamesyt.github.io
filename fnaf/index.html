@@ -2,9 +2,9 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>GR FNAF 2 - DEATH SYSTEM</title>
+    <title>GR FNAF 2 - VIDEO SYSTEM</title>
     <style>
-        :root { --fnaf-red: #600; --gui-green: #0f0; }
+        :root { --fnav-red: #600; --gui-green: #0f0; }
         body { background: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; user-select: none; }
 
         /* AMBIENTE */
@@ -32,8 +32,11 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         #cam-content { width: 80%; height: 75%; border: 3px solid #333; position: relative; background: #050505; overflow: hidden; }
-        .static { position: absolute; width: 100%; height: 100%; background: url('https://media.giphy.com/media/oEI9uWUznW3pS/giphy.gif'); opacity: 0.15; pointer-events: none; }
+        .static { position: absolute; width: 100%; height: 100%; background: url('https://media.giphy.com/media/oEI9uWUznW3pS/giphy.gif'); opacity: 0.15; pointer-events: none; z-index: 20; }
         
+        /* VIDEO E IMAGENS CAM */
+        #cam-img, #bonnie-video, #duto-vazio { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(0.5); position: absolute; top: 0; left: 0; }
+
         /* PUPPET BOX UI */
         #puppet-ui { display: none; text-align: center; margin-top: 20px; }
         #wind-btn { padding: 15px 30px; background: #444; color: #fff; border: 2px solid #fff; cursor: pointer; border-radius: 50%; width: 100px; height: 100px; font-weight: bold; }
@@ -91,8 +94,13 @@
     <div id="monitor-screen">
         <div class="static"></div>
         <div id="cam-content">
-            <div id="cam-label" style="position:absolute; top:10px; left:10px; color:lime; z-index:10;">CAM 01</div>
-            <img id="cam-img" src="" style="width:100%; height:100%; object-fit:cover; filter: grayscale(1) brightness(0.5);">
+            <div id="cam-label" style="position:absolute; top:10px; left:10px; color:lime; z-index:30;">CAM 01</div>
+            
+            <img id="cam-img" src="img/caixa.png">
+            <img id="duto-vazio" src="img/duto_vazio.png" style="display:none;">
+            <video id="bonnie-video" style="display:none;" loop muted playsinline>
+                <source src="video/bonnie_duto.mp4" type="video/mp4">
+            </video>
         </div>
         
         <div id="puppet-controls" style="margin-top:10px;">
@@ -162,7 +170,7 @@
         document.getElementById('foxy').style.transform = `scale(${foxyScale})`;
         if(game.foxyDist > 120) die("FOXY");
 
-        // BONNIE
+        // LÓGICA DO BONNIE
         if(game.bonniePos === 0 && Math.random() > 0.85) game.bonniePos = 1; 
         else if(game.bonniePos === 1 && Math.random() > 0.7) game.bonniePos = 2; 
 
@@ -171,7 +179,7 @@
             if(!game.mask) {
                 setTimeout(() => { 
                     if(!game.mask && game.active) die("BONNIE"); 
-                    else { 
+                    else if (game.active) { 
                         game.bonniePos = 0; 
                         document.getElementById('bonnie-office').style.display="none";
                     } 
@@ -192,12 +200,27 @@
     function updateCamView() {
         const img = document.getElementById('cam-img');
         const label = document.getElementById('cam-label');
+        const video = document.getElementById('bonnie-video');
+        const dutoVazio = document.getElementById('duto-vazio');
+
+        // Reset geral
+        img.style.display = "none";
+        video.style.display = "none";
+        dutoVazio.style.display = "none";
+        video.pause();
+
         if(game.currentCam === 1) {
             label.innerText = "CAM 01 - PRIZE CORNER";
+            img.style.display = "block";
             img.src = "img/caixa.png";
         } else {
             label.innerText = "CAM 02 - RIGHT VENT";
-            img.src = (game.bonniePos === 1) ? "img/bonnie.png" : "img/duto_vazio.png";
+            if(game.bonniePos === 1) {
+                video.style.display = "block";
+                if(game.mon) video.play(); // Só dá play se o monitor estiver aberto
+            } else {
+                dutoVazio.style.display = "block";
+            }
         }
     }
 
@@ -222,6 +245,7 @@
         if(game.mask) return;
         game.mon = !game.mon;
         document.getElementById('monitor-screen').style.bottom = game.mon ? '0' : '-100%';
+        updateCamView(); // Atualiza o vídeo (play/pause) ao abrir/fechar monitor
     }
 
     window.onkeydown = (e) => {
