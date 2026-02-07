@@ -2,12 +2,11 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>GR FNAF 2 - VIDEO SYSTEM</title>
+    <title>GR FNAF 2 - FIX SYSTEM</title>
     <style>
         :root { --fnav-red: #600; --gui-green: #0f0; }
         body { background: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; user-select: none; }
 
-        /* AMBIENTE */
         #viewport { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
         #office-wrapper { 
             width: 160vw; height: 100vh; position: absolute; left: -30vw; 
@@ -16,16 +15,13 @@
             transition: transform 0.1s ease-out;
         }
 
-        /* SALA E FOXY */
         .hallway { width: 500px; height: 450px; background: #050505; border: 12px solid #111; position: relative; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; box-shadow: inset 0 0 100px #000;}
         #foxy { width: 350px; position: absolute; bottom: -20px; filter: brightness(0); transform: scale(0.1); transition: transform 0.3s, filter 0.1s; z-index: 5; }
 
-        /* DUTO E BONNIE NA SALA */
         .vent { width: 220px; height: 300px; background: #020202; border: 6px solid #151515; position: absolute; bottom: 120px; border-radius: 40px 40px 0 0; }
         .vent-l { left: 80px; } .vent-r { right: 80px; }
         #bonnie-office { width: 280px; position: absolute; bottom: 50px; right: 80px; display: none; z-index: 40; filter: brightness(0.3); }
 
-        /* MONITOR DE CÂMERAS */
         #monitor-screen { 
             position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%; 
             background: #000; z-index: 150; transition: bottom 0.3s;
@@ -36,17 +32,16 @@
         
         #cam-img, #bonnie-video, #duto-vazio { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(0.5); position: absolute; top: 0; left: 0; }
 
-        /* MÁSCARA */
+        /* MÁSCARA CORRIGIDA - Agora dá pra ver através dos olhos */
         #mask-layer { 
             position: absolute; top: -100%; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at 30% 50%, transparent 10%, #000 28%), 
-                        radial-gradient(circle at 70% 50%, transparent 10%, #000 28%);
-            z-index: 200; transition: top 0.3s; pointer-events: none;
+            background: radial-gradient(circle at 35% 50%, transparent 12%, rgba(0,0,0,0.96) 25%), 
+                        radial-gradient(circle at 65% 50%, transparent 12%, rgba(0,0,0,0.96) 25%);
+            z-index: 200; transition: top 0.2s ease-in; pointer-events: none;
         }
 
-        /* LANTERNA E HUD */
         #flashlight { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 100; opacity: 0; mix-blend-mode: screen; }
-        .hud { position: absolute; top: 20px; right: 30px; z-index: 210; text-align: right; }
+        .hud { position: absolute; top: 20px; right: 30px; z-index: 90; text-align: right; }
         .battery-box { width: 120px; height: 15px; border: 2px solid #fff; margin-top: 5px; }
         #battery-fill { width: 100%; height: 100%; background: var(--gui-green); }
         #puppet-warning { color: red; font-weight: bold; animation: blink 0.5s infinite; display: none; }
@@ -55,12 +50,12 @@
         .cam-btn { padding: 10px; background: #222; color: #fff; border: 1px solid #fff; cursor: pointer; margin: 5px; }
         .cam-active { background: var(--gui-green); color: #000; }
 
-        /* SISTEMA DE MORTE ÚNICO */
         #jumpscare { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; }
         #jumpscare-media { width: 100%; height: 100%; object-fit: cover; position: absolute; }
-        #death-message { position: relative; z-index: 1001; color: red; font-size: 2.5rem; text-shadow: 2px 2px 10px black; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 10px; display: none; margin-top: 70vh; }
+        #death-message { position: relative; z-index: 1001; color: red; font-size: 2rem; text-shadow: 2px 2px 10px black; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 10px; display: none; margin-top: 75vh; }
 
-        .footer-nav { position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:50px; z-index: 210; }
+        /* FOOTER COM Z-INDEX BAIXO PARA NÃO SOBREPOR MONITOR */
+        .footer-nav { position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:50px; z-index: 50; }
     </style>
 </head>
 <body>
@@ -94,7 +89,7 @@
         </div>
         
         <div id="puppet-controls" style="margin-top:10px;">
-            <button id="wind-btn" onmousedown="windMusic(true)" onmouseup="windMusic(false)" onmouseleave="windMusic(false)" style="padding:15px; cursor:pointer;">WIND BOX</button>
+            <button id="wind-btn" onmousedown="windMusic(true)" onmouseup="windMusic(false)" onmouseleave="windMusic(false)" style="padding:15px; cursor:pointer; background:#333; color:white; border:1px solid white;">WIND BOX</button>
             <div style="width:200px; height:10px; border:1px solid #fff; margin-top:10px;">
                 <div id="music-bar" style="width:100%; height:100%; background:cyan;"></div>
             </div>
@@ -118,8 +113,8 @@
     </div>
 
     <div class="footer-nav">
-        <button class="cam-btn" onclick="toggleMask()">MÁSCARA (M)</button>
-        <button class="cam-btn" onclick="toggleMonitor()">MONITOR (TAB)</button>
+        <button class="cam-btn" style="border-radius:20px; padding:10px 30px;" onclick="toggleMask()">MÁSCARA (M)</button>
+        <button class="cam-btn" style="border-radius:20px; padding:10px 30px;" onclick="toggleMonitor()">MONITOR (TAB)</button>
     </div>
 </div>
 
@@ -140,35 +135,42 @@
         game.time++;
         
         game.battery -= (game.light ? 0.6 : 0.15);
-        document.getElementById('battery-fill').style.width = game.battery + "%";
+        document.getElementById('battery-fill').style.width = Math.max(0, game.battery) + "%";
         
         let h = Math.floor(game.time / 60);
         document.getElementById('clock').innerText = (h === 0 ? 12 : h) + ":00 AM";
 
         if(!game.isWinding) game.musicBox -= 1.8;
-        document.getElementById('music-bar').style.width = game.musicBox + "%";
+        document.getElementById('music-bar').style.width = Math.max(0, game.musicBox) + "%";
         document.getElementById('puppet-warning').style.display = game.musicBox < 30 ? "block" : "none";
         if(game.musicBox <= 0) die("PUPPET");
 
+        // FOXY Lógica
         if(!game.light) { if(Math.random() > 0.4) game.foxyDist += 8; }
         else { if(game.foxyDist > 0) game.foxyDist -= 18; }
         let foxyScale = 0.05 + (game.foxyDist / 80);
         document.getElementById('foxy').style.transform = `scale(${foxyScale})`;
         if(game.foxyDist > 120) die("FOXY");
 
+        // BONNIE Lógica
         if(game.bonniePos === 0 && Math.random() > 0.85) game.bonniePos = 1; 
         else if(game.bonniePos === 1 && Math.random() > 0.7) game.bonniePos = 2; 
 
         if(game.bonniePos === 2) {
             document.getElementById('bonnie-office').style.display = "block";
             if(!game.mask) {
+                // Se não estiver de máscara, morre em 3 segundos
                 setTimeout(() => { 
-                    if(!game.mask && game.active) die("BONNIE"); 
-                    else if (game.active) { 
-                        game.bonniePos = 0; 
-                        document.getElementById('bonnie-office').style.display="none";
-                    } 
+                    if(!game.mask && game.active && game.bonniePos === 2) die("BONNIE"); 
                 }, 3000);
+            } else {
+                // Se estiver de máscara, ele vai embora após um tempo
+                setTimeout(() => {
+                    if(game.mask && game.bonniePos === 2) {
+                        game.bonniePos = 0;
+                        document.getElementById('bonnie-office').style.display = "none";
+                    }
+                }, 4000);
             }
         }
 
@@ -179,12 +181,11 @@
     function die(enemy) { 
         if(!game.active) return;
         game.active = false;
-        
         const jumpscareDiv = document.getElementById('jumpscare');
         const messageDiv = document.getElementById('death-message');
         const container = document.getElementById('jumpscare-container');
         
-        container.innerHTML = ''; // Limpa mídia anterior
+        container.innerHTML = '';
         messageDiv.innerText = "MORTO POR: " + enemy;
         messageDiv.style.display = "block";
         jumpscareDiv.style.display = 'flex';
@@ -198,8 +199,25 @@
         } else {
             container.innerHTML = `<img id="jumpscare-media" src="https://media.giphy.com/media/oEI9uWUznW3pS/giphy.gif">`;
         }
-        
         setTimeout(() => location.reload(), 4500); 
+    }
+
+    function toggleMask() {
+        if(game.mon) return;
+        game.mask = !game.mask;
+        document.getElementById('mask-layer').style.top = game.mask ? '0' : '-100%';
+        // Quando coloca a máscara, desliga a lanterna por segurança
+        if(game.mask) {
+            game.light = false;
+            document.getElementById('flashlight').style.opacity = 0;
+        }
+    }
+
+    function toggleMonitor() {
+        if(game.mask) return;
+        game.mon = !game.mon;
+        document.getElementById('monitor-screen').style.bottom = game.mon ? '0' : '-100%';
+        updateCamView();
     }
 
     function switchCam(n) {
@@ -214,9 +232,7 @@
         const video = document.getElementById('bonnie-video');
         const dutoVazio = document.getElementById('duto-vazio');
 
-        img.style.display = "none";
-        video.style.display = "none";
-        dutoVazio.style.display = "none";
+        img.style.display = "none"; video.style.display = "none"; dutoVazio.style.display = "none";
         video.pause();
 
         if(game.currentCam === 1) {
@@ -245,21 +261,8 @@
         flash.style.top = (e.clientY - 250) + 'px';
     }
 
-    function toggleMask() {
-        if(game.mon) return;
-        game.mask = !game.mask;
-        document.getElementById('mask-layer').style.top = game.mask ? '0' : '-100%';
-    }
-
-    function toggleMonitor() {
-        if(game.mask) return;
-        game.mon = !game.mon;
-        document.getElementById('monitor-screen').style.bottom = game.mon ? '0' : '-100%';
-        updateCamView();
-    }
-
     window.onkeydown = (e) => {
-        if(e.code === 'Space') { game.light = true; document.getElementById('flashlight').style.opacity = 1; document.getElementById('foxy').style.filter = "brightness(1)"; }
+        if(e.code === 'Space' && !game.mask) { game.light = true; document.getElementById('flashlight').style.opacity = 1; document.getElementById('foxy').style.filter = "brightness(1)"; }
         if(e.key.toLowerCase() === 'm') toggleMask();
         if(e.code === 'Tab') { e.preventDefault(); toggleMonitor(); }
     };
