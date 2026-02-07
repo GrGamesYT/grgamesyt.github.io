@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>GR FNAF 2 - PUPPET & CAMERAS</title>
+    <title>GR FNAF 2 - DEATH SYSTEM</title>
     <style>
         :root { --fnaf-red: #600; --gui-green: #0f0; }
         body { background: #000; color: #fff; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; user-select: none; }
@@ -36,7 +36,7 @@
         
         /* PUPPET BOX UI */
         #puppet-ui { display: none; text-align: center; margin-top: 20px; }
-        #wind-btn { padding: 15px 30px; background: #444; color: #fff; border: 2px solid #fff; cursor: pointer; border-radius: 50%; width: 100px; height: 100px; }
+        #wind-btn { padding: 15px 30px; background: #444; color: #fff; border: 2px solid #fff; cursor: pointer; border-radius: 50%; width: 100px; height: 100px; font-weight: bold; }
         #wind-btn:active { background: #888; transform: scale(0.95); }
 
         /* MÁSCARA */
@@ -61,15 +61,19 @@
         .cam-btn { padding: 10px; background: #222; color: #fff; border: 1px solid #fff; cursor: pointer; margin: 5px; }
         .cam-active { background: var(--gui-green); color: #000; }
 
-        #jumpscare { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; display: none; }
-        #jumpscare img { width: 100%; height: 100%; object-fit: cover; }
+        /* SISTEMA DE MORTE */
+        #jumpscare { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        #jumpscare img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        #death-message { position: relative; z-index: 1001; color: red; font-size: 2.5rem; text-shadow: 2px 2px 10px black; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px; display: none; }
+
+        .footer-nav { position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:50px; z-index: 210; }
     </style>
 </head>
 <body>
 
 <div id="start-screen" style="position:fixed; width:100%; height:100%; background:#000; z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center;">
     <h1 style="color:red; font-size:3rem;">GR FNAF 2</h1>
-    <button onclick="startGame()" style="padding:20px 60px; background:#200; color:red; border:2px solid red; cursor:pointer;">INICIAR NOITE 2</button>
+    <button onclick="startGame()" style="padding:20px 60px; background:#200; color:red; border:2px solid red; cursor:pointer;">INICIAR NOITE</button>
 </div>
 
 <div id="viewport" onmousemove="moveOffice(event)">
@@ -87,12 +91,12 @@
     <div id="monitor-screen">
         <div class="static"></div>
         <div id="cam-content">
-            <div id="cam-label" style="position:absolute; top:10px; left:10px; color:lime; z-index:10;">CAM 01 - PRIZE CORNER</div>
+            <div id="cam-label" style="position:absolute; top:10px; left:10px; color:lime; z-index:10;">CAM 01</div>
             <img id="cam-img" src="" style="width:100%; height:100%; object-fit:cover; filter: grayscale(1) brightness(0.5);">
         </div>
         
         <div id="puppet-controls" style="margin-top:10px;">
-            <button id="wind-btn" onmousedown="windMusic(true)" onmouseup="windMusic(false)">WIND BOX</button>
+            <button id="wind-btn" onmousedown="windMusic(true)" onmouseup="windMusic(false)" onmouseleave="windMusic(false)">WIND BOX</button>
             <div style="width:200px; height:10px; border:1px solid #fff; margin-top:10px;">
                 <div id="music-bar" style="width:100%; height:100%; background:cyan;"></div>
             </div>
@@ -110,9 +114,12 @@
         <div id="puppet-warning">⚠ MUSIC BOX ⚠</div>
     </div>
 
-    <div id="jumpscare"><img src="img/susto.gif"></div>
+    <div id="jumpscare">
+        <div id="death-message">MORTO POR: FOXY</div>
+        <img src="img/susto.gif">
+    </div>
 
-    <div style="position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:50px;">
+    <div class="footer-nav">
         <button class="cam-btn" onclick="toggleMask()">MÁSCARA (M)</button>
         <button class="cam-btn" onclick="toggleMonitor()">MONITOR (TAB)</button>
     </div>
@@ -121,7 +128,7 @@
 <script>
     let game = { 
         active: false, foxyDist: 0, battery: 100, mask: false, mon: false, light: false, time: 0,
-        musicBox: 100, isWinding: false, currentCam: 1, bonniePos: 0 // 0: Fora, 1: Cam 02, 2: Sala
+        musicBox: 100, isWinding: false, currentCam: 1, bonniePos: 0 
     };
 
     function startGame() {
@@ -134,38 +141,46 @@
         if(!game.active) return;
         game.time++;
         
-        // BATERIA E RELÓGIO
+        // BATERIA
         game.battery -= (game.light ? 0.6 : 0.15);
         document.getElementById('battery-fill').style.width = game.battery + "%";
+        
+        // RELÓGIO
         let h = Math.floor(game.time / 60);
         document.getElementById('clock').innerText = (h === 0 ? 12 : h) + ":00 AM";
 
-        // CAIXA DE MÚSICA (PUPPET)
-        if(!game.isWinding) game.musicBox -= 1.5;
+        // PUPPET
+        if(!game.isWinding) game.musicBox -= 1.8;
         document.getElementById('music-bar').style.width = game.musicBox + "%";
         document.getElementById('puppet-warning').style.display = game.musicBox < 30 ? "block" : "none";
-        if(game.musicBox <= 0) die();
+        if(game.musicBox <= 0) die("PUPPET");
 
-        // LÓGICA DO FOXY
-        if(!game.light) { if(Math.random() > 0.4) game.foxyDist += 7; }
+        // FOXY
+        if(!game.light) { if(Math.random() > 0.4) game.foxyDist += 8; }
         else { if(game.foxyDist > 0) game.foxyDist -= 18; }
         let foxyScale = 0.05 + (game.foxyDist / 80);
         document.getElementById('foxy').style.transform = `scale(${foxyScale})`;
-        if(game.foxyDist > 120) die();
+        if(game.foxyDist > 120) die("FOXY");
 
-        // LÓGICA DO BONNIE
-        if(game.bonniePos === 0 && Math.random() > 0.8) game.bonniePos = 1; // Vai pro duto
-        else if(game.bonniePos === 1 && Math.random() > 0.7) game.bonniePos = 2; // Entra na sala
+        // BONNIE
+        if(game.bonniePos === 0 && Math.random() > 0.85) game.bonniePos = 1; 
+        else if(game.bonniePos === 1 && Math.random() > 0.7) game.bonniePos = 2; 
 
         if(game.bonniePos === 2) {
             document.getElementById('bonnie-office').style.display = "block";
             if(!game.mask) {
-                setTimeout(() => { if(!game.mask) die(); else { game.bonniePos = 0; document.getElementById('bonnie-office').style.display="none";} }, 3000);
+                setTimeout(() => { 
+                    if(!game.mask && game.active) die("BONNIE"); 
+                    else { 
+                        game.bonniePos = 0; 
+                        document.getElementById('bonnie-office').style.display="none";
+                    } 
+                }, 3000);
             }
         }
 
         updateCamView();
-        if(game.battery <= 0) die();
+        if(game.battery <= 0) die("SEM ENERGIA");
     }
 
     function switchCam(n) {
@@ -177,17 +192,16 @@
     function updateCamView() {
         const img = document.getElementById('cam-img');
         const label = document.getElementById('cam-label');
-        
         if(game.currentCam === 1) {
-            label.innerText = "CAM 01 - PRIZE CORNER (MUSIC BOX)";
-            img.src = "img/caixa.png"; // VOCÊ PRECISA DESSA IMAGEM DA CAIXA
+            label.innerText = "CAM 01 - PRIZE CORNER";
+            img.src = "img/caixa.png";
         } else {
             label.innerText = "CAM 02 - RIGHT VENT";
             img.src = (game.bonniePos === 1) ? "img/bonnie.png" : "img/duto_vazio.png";
         }
     }
 
-    function windMusic(val) { game.isWinding = val; if(val && game.musicBox < 100) game.musicBox += 5; }
+    function windMusic(val) { game.isWinding = val; if(val && game.musicBox < 100) game.musicBox += 6; }
 
     function moveOffice(e) {
         if(!game.active || game.mon) return;
@@ -217,7 +231,19 @@
     };
     window.onkeyup = (e) => { if(e.code === 'Space') { game.light = false; document.getElementById('flashlight').style.opacity = 0; document.getElementById('foxy').style.filter = "brightness(0)"; }};
 
-    function die() { game.active = false; document.getElementById('jumpscare').style.display = 'block'; setTimeout(() => location.reload(), 3000); }
+    function die(enemy) { 
+        if(!game.active) return;
+        game.active = false;
+        
+        const jumpscareDiv = document.getElementById('jumpscare');
+        const messageDiv = document.getElementById('death-message');
+        
+        messageDiv.innerText = "MORTO POR: " + enemy;
+        messageDiv.style.display = "block";
+        jumpscareDiv.style.display = 'flex';
+        
+        setTimeout(() => location.reload(), 3500); 
+    }
 </script>
 </body>
 </html>
