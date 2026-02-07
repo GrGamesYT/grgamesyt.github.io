@@ -2,248 +2,187 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>FNAF 2 - UPGRADED ENGINE</title>
+<title>FNAF 2 - CORREÇÃO MÁSCARA E BONNIE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{--green:#0f0; --red:#f00; --scan-color: rgba(255,255,255,0.1);}
+:root{--green:#0f0; --red:#f00;}
 
 body{
-    margin:0;
-    background:#000;
-    color:#fff;
+    margin:0; background:#000; color:#fff;
     font-family:'Courier New', monospace;
-    overflow:hidden;
-    user-select:none;
+    overflow:hidden; user-select:none;
 }
 
 #viewport{width:100vw;height:100vh;position:relative; overflow: hidden;}
 
-/* --- AMBIENTE E ESCRITÓRIO --- */
+/* --- ESCRITÓRIO --- */
 #office-wrapper{
     width:140vw; height:100vh;
     position:absolute; left:-20vw;
-    /* Parede com textura básica */
-    background: linear-gradient(to bottom, #1a1a1a 0%, #080808 60%);
+    background: linear-gradient(to bottom, #151515 0%, #050505 60%);
     display:flex; align-items:center; justify-content:center;
     transition: transform 0.1s linear;
 }
 
-/* CHÃO QUADRICULADO (CSS PURO) */
+/* Chão */
 .floor {
     position: absolute; bottom: 0; width: 100%; height: 25%;
-    background-image:
-        linear-gradient(45deg, #111 25%, transparent 25%),
-        linear-gradient(-45deg, #111 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #111 75%),
-        linear-gradient(-45deg, transparent 75%, #111 75%);
-    background-size: 60px 60px;
-    background-color: #050505;
+    background: repeating-linear-gradient(45deg, #111, #111 40px, #222 40px, #222 80px);
     transform: perspective(300px) rotateX(20deg);
-    z-index: 5;
-    border-top: 4px solid #000;
+    z-index: 5; border-top: 5px solid #000;
 }
 
-/* LUZ DE TETO */
-.ceiling-light {
-    position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
-    width: 200px; height: 100px;
-    background: radial-gradient(circle, rgba(255,255,200,0.1) 0%, transparent 70%);
-    box-shadow: 0 0 100px rgba(255,255,255,0.05);
-    z-index: 10;
-}
-
+/* Corredor */
 .hallway{
-    width:400px; height:500px;
-    background:#000;
-    border:15px solid #1a1a1a;
-    border-bottom: none;
-    position:relative;
-    display:flex; justify-content:center; align-items:flex-end;
-    box-shadow: inset 0 0 50px #000;
-    z-index: 20;
+    width:400px; height:500px; background:#000;
+    border:20px solid #111; border-bottom: none;
+    position:relative; display:flex; justify-content:center; align-items:flex-end;
+    box-shadow: inset 0 0 80px #000; z-index: 20;
 }
 
 #foxy{
-    width:300px;
-    position:absolute; bottom:0;
-    filter:brightness(0);
-    transform:scale(0.5); /* Começa longe */
-    transition: transform 0.5s ease;
+    width:300px; position:absolute; bottom:0;
+    filter:brightness(0); transform:scale(0.5); transition: transform 0.5s ease;
 }
 
+/* Dutos */
 .vent{
-    width:200px; height:250px;
-    background:#050505;
-    border:8px solid #222;
-    position:absolute; bottom:150px;
-    z-index: 15;
-    box-shadow: inset 0 0 40px #000;
+    width:220px; height:280px; background:#080808;
+    border:10px solid #222; position:absolute; bottom:150px;
+    z-index: 15; box-shadow: inset 0 0 60px #000;
 }
 .vent-l{left:100px;}
 .vent-r{right:100px;}
 
-/* Efeito de piscar fraco quando animatronic está no duto */
-.vent-warning {
-    animation: flickerVent 2s infinite;
-}
-@keyframes flickerVent {
-    0% { box-shadow: inset 0 0 40px #000; background: #050505; }
-    5% { box-shadow: inset 0 0 40px #222; background: #0a0a0a; }
-    10% { box-shadow: inset 0 0 40px #000; background: #050505; }
-    100% { box-shadow: inset 0 0 40px #000; background: #050505; }
-}
-
-/* BONNIE NO ESCRITÓRIO */
+/* BONNIE (CORRIGIDO: POSIÇÃO DIREITA) */
 #bonnie-office{
-    width:100%; height:100%;
-    position:absolute; top:0; left:0;
-    background-image: url('img/bonnie.png'); /* Certifique-se que sua imagem é PNG transparente */
+    width: 450px; /* Tamanho ajustado */
+    height: 600px;
+    position: absolute; 
+    bottom: 0; 
+    right: 50px; /* Fica na direita, perto do duto */
+    background-image: url('img/bonnie.png'); 
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center bottom;
-    display:none;
-    z-index: 120; /* Fica na frente da sala, mas atrás da máscara */
-    filter: brightness(0.3) contrast(1.2); /* Escuro e assustador */
+    background-position: bottom right;
+    display: none;
+    z-index: 120;
+    filter: brightness(0.4) contrast(1.3);
+    /* Animação leve de "respirar" para parecer vivo */
+    animation: breathing 3s infinite ease-in-out;
+}
+
+@keyframes breathing {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* --- MÁSCARA (CORRIGIDO: SEM IMAGEM QUEBRADA) --- */
+#mask-layer{
+    position:absolute; inset:0;
+    z-index:200; pointer-events:none;
+    opacity:0; transition:opacity 0.1s;
+    /* CSS Puro para fazer os buracos dos olhos */
+    background: radial-gradient(circle at 35% 50%, transparent 15%, rgba(0,0,0,0.95) 25%),
+                radial-gradient(circle at 65% 50%, transparent 15%, rgba(0,0,0,0.95) 25%);
+    background-color: rgba(0,0,0,0.4); /* Escurece um pouco o centro */
+    box-shadow: inset 0 0 100px #000;
 }
 
 /* --- LANTERNA --- */
 #flashlight{
-    position:absolute;
-    width:600px; height:600px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 40%, transparent 70%);
-    opacity:0;
-    pointer-events:none;
-    z-index:100;
-    mix-blend-mode: overlay;
+    position:absolute; width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
+    opacity:0; pointer-events:none; z-index:100; mix-blend-mode: overlay;
     transform: translate(-50%, -50%);
-}
-
-/* --- MÁSCARA (Melhorada) --- */
-#mask-layer{
-    position:absolute; inset:0;
-    z-index:200; pointer-events:none;
-    opacity:0; transition:opacity 0.2s;
-    background: rgba(0,0,0,0.85); /* Fundo geral escuro */
-}
-
-/* Buracos dos olhos usando clip-path ou gradiente reverso é complexo, 
-   vamos usar gradiente radial para "limpar" a visão */
-#mask-layer {
-    background: radial-gradient(circle at 30% 50%, rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.95) 35%),
-                radial-gradient(circle at 70% 50%, rgba(0,0,0,0.1) 10%, rgba(0,0,0,0.95) 35%);
-}
-
-/* Borda da máscara para dar imersão */
-#mask-border {
-    position: absolute; inset: 0;
-    box-shadow: inset 0 0 100px #000;
-    background-image: url('https://i.imgur.com/4b7rX8M.png'); /* Textura de respiração opcional, ou ruído */
-    opacity: 0.3;
-    pointer-events: none;
 }
 
 /* --- MONITOR --- */
 #monitor-screen{
     position:absolute; bottom:-100%; width:100%; height:100%;
-    background:#111; z-index:150;
-    transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background:#111; z-index:150; transition: bottom 0.3s;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    border-top: 10px solid #333;
+    border-top: 10px solid #444;
 }
 
 #cam-content{
-    width:90%; height:75%;
-    border:4px solid #444; background:#000;
+    width:85%; height:70%; border:5px solid #333; background:#000;
     position:relative; overflow:hidden;
-    box-shadow: 0 0 20px rgba(0,255,0,0.2);
 }
-
-/* Scanlines (Linhas de TV) */
 .scanlines {
     position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
-    background-size: 100% 4px;
+    background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(0,0,0,0.3) 3px);
     z-index: 50; pointer-events: none;
 }
-.cam-text {
-    position: absolute; top: 20px; left: 20px;
-    font-size: 24px; color: #fff; font-weight: bold;
-    z-index: 60; text-shadow: 2px 2px 0 #000;
-}
-.rec-dot {
-    display: inline-block; width: 15px; height: 15px; background: red;
-    border-radius: 50%; margin-right: 10px;
-    animation: blink 1s infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
 #cam-img, #duto-vazio, #bonnie-video{
     position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; filter: grayscale(1) contrast(1.2) brightness(0.7);
+    object-fit:cover; filter: grayscale(1) brightness(0.7);
 }
 
 /* PUPPET */
 #puppet-controls{
     position: absolute; bottom: 20px; right: 20px;
-    z-index: 60; display: flex; flex-direction: column; align-items: center;
+    display:flex; flex-direction:column; align-items:center;
 }
 .wind-btn {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: transparent;
-    border: 4px solid #fff;
-    color: #fff; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; text-align: center;
-    transition: 0.1s;
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 4px solid #fff; background: transparent; color: #fff;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
 }
-.wind-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
-
-/* Animação de girar quando carrega */
-.winding-anim { animation: spin 0.5s linear infinite; border-color: cyan; color: cyan; }
-@keyframes spin { 100% { transform: rotate(360deg); } }
+.wind-btn:active { background: rgba(255,255,255,0.2); }
 
 /* HUD */
-.hud{ position:absolute; top:20px; right:30px; z-index:80; text-align:right; font-size: 20px; }
-.battery-box{ width:150px; height:20px; border:2px solid #fff; margin-top: 5px; background: #222; }
-#battery-fill{ width:100%; height:100%; background:var(--green); transition: width 0.5s; }
+.hud{ position:absolute; top:20px; right:30px; z-index:80; text-align:right; font-size:24px; }
+.battery-box{ width:150px; height:20px; border:2px solid #fff; margin-top:5px; background:#222; }
+#battery-fill{ width:100%; height:100%; background:var(--green); }
 
-/* NAV */
+/* BOTÕES */
 .footer-nav{
     position:absolute; bottom:20px; width:100%;
-    display:flex; justify-content:center; gap:20px; z-index:90;
-    pointer-events: none; /* Deixa clicar através, os botões tem pointer-events auto */
+    display:flex; justify-content:center; gap:30px; z-index:90;
+    pointer-events: none;
 }
 .control-btn {
-    pointer-events: auto;
-    padding: 15px 40px; background: rgba(0,0,0,0.7);
-    border: 1px solid #555; color: #fff; font-family: inherit; font-size: 18px;
+    pointer-events: auto; padding: 15px 40px; background: rgba(0,0,0,0.8);
+    border: 1px solid #777; color: #fff; font-family: inherit; font-size: 18px;
     cursor: pointer; text-transform: uppercase;
-    transition: 0.2s;
 }
 .control-btn:hover { background: #fff; color: #000; }
 
-.map-btn {
-    position: absolute; bottom: 20px; right: 20px;
-    display: flex; gap: 10px;
-}
-.cam-btn-small {
-    padding: 10px 15px; background: #222; border: 1px solid #555; color: #fff; cursor: pointer;
-}
+.map-btn { position: absolute; bottom: 30px; right: 30px; display: flex; gap: 10px; }
+.cam-btn-small { padding: 10px 20px; background: #222; border: 1px solid #fff; color: #fff; cursor: pointer; }
 .cam-active { background: var(--green); color: #000; font-weight: bold; }
 
-/* JUMPSCARE */
+/* TELA DE MORTE E DICAS */
 #jumpscare{
     position:fixed; inset:0; background:#000; z-index:999;
-    display:none; align-items:center; justify-content:center;
+    display:none; flex-direction: column; align-items:center; justify-content:center;
 }
-/* Limita o tamanho do vídeo para não explodir na tela */
-#jumpscare video {
-    max-width: 100%; max-height: 100%;
-    object-fit: contain;
+#jumpscare video, #jumpscare img {
+    width:100%; height:100%; object-fit:contain; position: absolute; top: 0; left: 0; z-index: 1;
 }
+#death-info {
+    z-index: 10;
+    position: absolute;
+    bottom: 50px;
+    width: 80%;
+    text-align: center;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid #f00;
+    padding: 20px;
+    color: #fff;
+    font-size: 18px;
+    display: none; /* Só aparece depois do susto */
+    animation: fadeIn 2s forwards;
+}
+#death-cause { color: #f00; font-size: 30px; margin-bottom: 10px; font-weight: bold; }
+#death-tip { color: #ccc; font-style: italic; }
+
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
 </style>
 </head>
 
@@ -252,51 +191,37 @@ body{
 <div id="viewport" onmousemove="moveOffice(event)">
     
     <div id="office-wrapper">
-        <div class="ceiling-light"></div>
-        
         <div class="vent vent-l"></div>
-        <div class="hallway"><img id="foxy" src="img/foxy.png" alt="Foxy"></div>
+        <div class="hallway"><img id="foxy" src="img/foxy.png"></div>
+        
         <div id="vent-r-element" class="vent vent-r"></div>
+        <div id="bonnie-office"></div> 
         
         <div class="floor"></div>
-
-        <div id="bonnie-office"></div>
     </div>
 
     <div id="flashlight"></div>
 
-    <div id="mask-layer">
-        <div id="mask-border"></div>
-    </div>
+    <div id="mask-layer"></div>
 
     <div id="monitor-screen">
         <div id="cam-content">
             <div class="scanlines"></div>
-            <div class="cam-text"><span class="rec-dot"></span>CAM <span id="cam-num">01</span></div>
+            <div style="position:absolute; top:20px; left:20px; font-size:20px; z-index:60">CAM <span id="cam-num">01</span></div>
             
-            <img id="cam-img" src="img/caixa.png" alt="Puppet Box">
-            <img id="duto-vazio" src="img/duto_vazio.png" style="display:none" alt="Duto">
-            
+            <img id="cam-img" src="img/caixa.png">
+            <img id="duto-vazio" src="img/duto_vazio.png" style="display:none">
             <video id="bonnie-video" loop muted playsinline style="display:none">
                 <source src="video/bonnie_duto.mp4" type="video/mp4">
             </video>
 
             <div id="puppet-controls">
-                <div style="margin-bottom:5px; font-size:10px;">MUSIC BOX</div>
-                <button id="wind-btn" class="wind-btn"
-                    onmousedown="startWind()" 
-                    onmouseup="stopWind()" 
-                    onmouseleave="stopWind()"
-                    ontouchstart="startWind()" 
-                    ontouchend="stopWind()">
-                    WIND
-                </button>
-                <div style="width:80px;height:5px;background:#333;margin-top:5px">
+                <button class="wind-btn" onmousedown="startWind()" onmouseup="stopWind()" onmouseleave="stopWind()" ontouchstart="startWind()" ontouchend="stopWind()">WIND</button>
+                <div style="width:90px;height:5px;background:#333;margin-top:5px">
                     <div id="music-bar" style="width:100%;height:100%;background:cyan"></div>
                 </div>
             </div>
         </div>
-
         <div class="map-btn">
             <button class="cam-btn-small cam-active" onclick="switchCam(1)">CAM 01</button>
             <button class="cam-btn-small" onclick="switchCam(2)">CAM 02</button>
@@ -313,88 +238,69 @@ body{
         <button class="control-btn" onclick="toggleMonitor()">MONITOR (TAB)</button>
     </div>
 
-    <div id="jumpscare"></div>
+    <div id="jumpscare">
+        <div id="jumpscare-content"></div>
+        <div id="death-info">
+            <div id="death-cause">GAME OVER</div>
+            <div id="death-tip">Dica aqui...</div>
+            <br>
+            <button onclick="location.reload()" style="padding:10px 20px; cursor:pointer;">TENTAR NOVAMENTE</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-// CONFIGURAÇÕES DO JOGO
+// DADOS DE DICAS
+const TIPS = {
+    "FOXY": "FOXY NÃO GOSTA DE LUZ! Pisque a lanterna no corredor repetidamente quando ele aparecer para resetar a posição dele.",
+    "BONNIE": "REFLEXOS RÁPIDOS! Quando o Bonnie entrar no escritório (Duto Direito), coloque a máscara em menos de 2 segundos e espere ele ir embora.",
+    "PUPPET": "CAIXA DE MÚSICA! Nunca deixe a música acabar. Cheque a CAM 01 constantemente e segure o botão 'WIND' para dar corda.",
+    "BATERIA": "ECONOMIA DE ENERGIA! Não use a lanterna ou o monitor por tempo demais. Se a energia acabar, você fica vulnerável."
+};
+
 const game = {
-    active: true,
-    mask: false,
-    mon: false,
-    light: false,
-    battery: 100,
-    time: 0, // em segundos reais
-    hour: 0, // horas do jogo (0 = 12AM)
-    
-    // IA - FOXY
-    foxyStage: 0, // 0 a 100. 100 = Morte. Lanterna diminui isso.
-    
-    // IA - BONNIE
-    bonnieLoc: 0, // 0: Palco/Fora, 1: Duto (Cam 02), 2: Escritório (Ataque)
-    bonnieTimer: 0, // Tempo para mover
-    bonniePatience: 300, // Tempo que ele espera vc por a mascara
-    bonnieLeaving: false, // Se true, ele está saindo
-    
-    // IA - PUPPET
-    musicBox: 100,
-    winding: false,
-    
+    active: true, mask: false, mon: false, light: false,
+    battery: 100, time: 0, hour: 0,
+    foxyStage: 0,
+    bonnieLoc: 0, bonniePatience: 250, bonnieLeaving: false,
+    musicBox: 100, winding: false,
     currentCam: 1
 };
 
-// Loop principal (Roda 30x por segundo para suavidade)
 let loop = setInterval(gameLoop, 33);
-let secondLoop = setInterval(logicLoop, 1000); // Lógica mais lenta (1s)
+let logic = setInterval(logicLoop, 1000);
 
 function gameLoop(){
     if(!game.active) return;
 
-    // Atualiza Barra de Música
-    if(game.winding) {
-        game.musicBox = Math.min(100, game.musicBox + 0.8);
-    } else {
-        game.musicBox -= 0.15; // Velocidade que a caixa desce
-    }
+    // Puppet Music
+    if(game.winding) game.musicBox = Math.min(100, game.musicBox + 0.8);
+    else game.musicBox -= 0.15;
     
-    // Visual da Barra
     let bar = document.getElementById('music-bar');
     bar.style.width = Math.max(0, game.musicBox) + "%";
-    bar.style.background = game.musicBox < 20 ? "red" : "cyan";
+    if(game.musicBox < 20) bar.style.background = "red";
+    else bar.style.background = "cyan";
 
     if(game.musicBox <= 0) die("PUPPET");
 
-    // Lógica do Foxy (Visual)
-    // Se a lanterna tá ligada, reduz chance do Foxy
-    if(game.light && !game.mask && !game.mon) {
-        game.foxyStage = Math.max(0, game.foxyStage - 1);
-    } else {
-        game.foxyStage += 0.05;
-    }
-    // Aproxima o Foxy visualmente no corredor
-    let foxyScale = 0.5 + (game.foxyStage / 200); 
+    // Foxy
+    if(game.light && !game.mask && !game.mon) game.foxyStage = Math.max(0, game.foxyStage - 1.5);
+    else game.foxyStage += 0.05;
+    
+    let foxyScale = 0.5 + (game.foxyStage / 200);
     document.getElementById('foxy').style.transform = `scale(${foxyScale})`;
     if(game.foxyStage > 100) die("FOXY");
 
-    // Lógica do Bonnie no Escritório (O ENCARAR)
+    // Bonnie no escritório
     if(game.bonnieLoc === 2) {
-        // Se a máscara estiver posta
         if(game.mask) {
-            game.bonniePatience--; // Decrementa tempo para ele ir embora
+            game.bonniePatience--;
             if(game.bonniePatience <= 0) {
-                // Bonnie vai embora
-                game.bonnieLoc = 0;
-                game.bonnieLeaving = false;
+                game.bonnieLoc = 0; // Saiu
                 document.getElementById('bonnie-office').style.display = "none";
-                console.log("Bonnie foi embora!");
-            }
-        } else {
-            // Se estiver SEM máscara enquanto ele tá na sala
-            // Dá um tempinho de reação (ex: 100 frames = ~3 segundos)
-            // Se passar disso, morre.
-            if(!game.bonnieLeaving) {
-                // Aqui você poderia colocar um timer de morte
-                // Por simplicidade, vou usar um random pequeno no loop de segundos
+                game.bonnieLeaving = false;
             }
         }
     }
@@ -403,175 +309,120 @@ function gameLoop(){
 function logicLoop(){
     if(!game.active) return;
     
-    // Relógio
     game.time++;
-    if(game.time % 60 === 0) game.hour++; // Cada 60s reais = 1 hora
-    let displayHour = game.hour === 0 ? 12 : game.hour;
-    document.getElementById('clock').innerText = displayHour + ":00 AM";
-    if(game.hour === 6) { alert("6:00 AM - VOCÊ VENCEU!"); location.reload(); }
+    if(game.time % 60 === 0) game.hour++;
+    let dh = game.hour === 0 ? 12 : game.hour;
+    document.getElementById('clock').innerText = dh + ":00 AM";
+    if(game.hour === 6) { alert("6:00 AM - VENCEU!"); location.reload(); }
 
-    // Bateria
     let drain = 0.1;
     if(game.light) drain = 0.5;
     if(game.mon) drain = 0.3;
     game.battery -= drain;
     document.getElementById('battery-fill').style.width = game.battery + "%";
-    if(game.battery <= 0) {
-        game.light = false; game.mon = false; // Acabou a luz
-        // Game over escuro...
-    }
+    
+    if(game.battery <= 0) die("BATERIA");
 
-    // IA BONNIE MOVEMENT
-    // Chance de mover a cada segundo
-    if(game.bonnieLoc === 0 && Math.random() > 0.7) {
-        game.bonnieLoc = 1; // Vai pro Duto
-        document.getElementById('vent-r-element').classList.add('vent-warning'); // Duto pisca
-    } 
+    // IA Bonnie
+    if(game.bonnieLoc === 0 && Math.random() > 0.7) game.bonnieLoc = 1; // Duto
     else if(game.bonnieLoc === 1 && Math.random() > 0.6) {
-        // Sai do duto e ENTRA na sala
-        game.bonnieLoc = 2;
-        game.bonniePatience = 5; // 5 segundos com máscara para ele sair
-        document.getElementById('vent-r-element').classList.remove('vent-warning');
-        
-        // Força monitor abaixar
+        game.bonnieLoc = 2; // Escritório
+        game.bonniePatience = 4; // SEGUNDOS REAIS
         if(game.mon) toggleMonitor();
-        
         document.getElementById('bonnie-office').style.display = "block";
         
-        // Timer da morte se não botar a máscara logo
+        // Timeout da morte
         setTimeout(() => {
-            if(game.bonnieLoc === 2 && !game.mask && game.active) {
-                die("BONNIE");
-            }
-        }, 3500); // 3.5 segundos para reagir
+            if(game.bonnieLoc === 2 && !game.mask && game.active) die("BONNIE");
+        }, 3000); 
     }
-
     updateCam();
 }
 
-// --- CONTROLES ---
-
 function moveOffice(e){
     if(game.mon) return;
-    // Movimento suave do mouse
     let x = (e.clientX / window.innerWidth) - 0.5;
-    // Limita movimento
-    let move = x * -30; // -30vw a +30vw
-    document.getElementById('office-wrapper').style.transform = `translateX(${move}vw)`;
-    
-    // Lanterna segue o mouse
+    document.getElementById('office-wrapper').style.transform = `translateX(${x * -30}vw)`;
     let f = document.getElementById('flashlight');
-    f.style.left = e.clientX + 'px';
-    f.style.top = e.clientY + 'px';
+    f.style.left = e.clientX + 'px'; f.style.top = e.clientY + 'px';
 }
 
 function toggleMask(){
-    if(game.mon) return; // Não pode por mascara com monitor aberto
+    if(game.mon) return;
     game.mask = !game.mask;
-    
-    let maskEl = document.getElementById('mask-layer');
-    maskEl.style.opacity = game.mask ? 1 : 0;
-    
-    // Som de respiração poderia entrar aqui
-    if(game.mask) {
-        game.light = false;
-        document.getElementById('flashlight').style.opacity = 0;
-    }
+    document.getElementById('mask-layer').style.opacity = game.mask ? 1 : 0;
+    if(game.mask) { game.light = false; document.getElementById('flashlight').style.opacity = 0; }
 }
 
 function toggleMonitor(){
-    if(game.mask) return; // Não pode abrir monitor com mascara
+    if(game.mask) return;
     game.mon = !game.mon;
     document.getElementById('monitor-screen').style.bottom = game.mon ? '0' : '-100%';
-    
-    // Se abrir o monitor, para a lanterna
-    if(game.mon) {
-        game.light = false;
-        document.getElementById('flashlight').style.opacity = 0;
-    }
+    if(game.mon) { game.light = false; document.getElementById('flashlight').style.opacity = 0; }
 }
 
-function startWind() { game.winding = true; document.getElementById('wind-btn').classList.add('winding-anim'); }
-function stopWind() { game.winding = false; document.getElementById('wind-btn').classList.remove('winding-anim'); }
+function startWind(){ game.winding = true; }
+function stopWind(){ game.winding = false; }
 
 function switchCam(n){
     game.currentCam = n;
     document.getElementById('cam-num').innerText = "0" + n;
     document.querySelectorAll('.cam-btn-small').forEach((b,i) => {
-        if(i+1 === n) b.classList.add('cam-active');
-        else b.classList.remove('cam-active');
+        b.classList.toggle('cam-active', i+1 === n);
     });
     updateCam();
 }
 
 function updateCam(){
     if(!game.mon) return;
-    
-    let cam1 = document.getElementById('cam-img');
-    let cam2_empty = document.getElementById('duto-vazio');
-    let cam2_bonnie = document.getElementById('bonnie-video');
-    
-    // Reset displays
-    cam1.style.display = "none";
-    cam2_empty.style.display = "none";
-    cam2_bonnie.style.display = "none";
-
-    if(game.currentCam === 1) {
-        cam1.style.display = "block";
-    } else if(game.currentCam === 2) {
-        if(game.bonnieLoc === 1) {
-            cam2_bonnie.style.display = "block";
-            cam2_bonnie.play();
-        } else {
-            cam2_empty.style.display = "block";
-            cam2_bonnie.pause();
-        }
+    document.getElementById('cam-img').style.display = game.currentCam === 1 ? "block" : "none";
+    document.getElementById('duto-vazio').style.display = (game.currentCam === 2 && game.bonnieLoc !== 1) ? "block" : "none";
+    let vid = document.getElementById('bonnie-video');
+    if(game.currentCam === 2 && game.bonnieLoc === 1){
+        vid.style.display = "block"; vid.play();
+    } else {
+        vid.style.display = "none"; vid.pause();
     }
 }
 
-// CONTROLES DE TECLADO
-window.addEventListener('keydown', (e) => {
-    if(e.code === "Space" && !game.mask && !game.mon){
+// TECLADO
+window.addEventListener('keydown', e => {
+    if(e.code==="Space" && !game.mask && !game.mon){
         game.light = true;
         document.getElementById('flashlight').style.opacity = 1;
-        document.getElementById('foxy').style.filter = "brightness(1)"; // Revela o Foxy
+        document.getElementById('foxy').style.filter = "brightness(1)";
     }
-    if(e.key.toLowerCase() === "m") toggleMask();
-    if(e.code === "Tab") { e.preventDefault(); toggleMonitor(); }
+    if(e.key.toLowerCase()==="m") toggleMask();
+    if(e.code==="Tab") {e.preventDefault(); toggleMonitor();}
 });
-
-window.addEventListener('keyup', (e) => {
-    if(e.code === "Space"){
+window.addEventListener('keyup', e => {
+    if(e.code==="Space"){
         game.light = false;
         document.getElementById('flashlight').style.opacity = 0;
-        document.getElementById('foxy').style.filter = "brightness(0)"; // Esconde o Foxy
+        document.getElementById('foxy').style.filter = "brightness(0)";
     }
 });
 
-// MORTE
 function die(enemy){
     if(!game.active) return;
     game.active = false;
-    
     let j = document.getElementById('jumpscare');
+    let jc = document.getElementById('jumpscare-content');
     j.style.display = "flex";
     
-    let content = "";
-    if(enemy === "BONNIE") {
-        content = `<video autoplay playsinline src="video/bonnie_morte.mp4"></video>`;
-    } else if (enemy === "PUPPET") {
-        content = `<h1 style="font-size:100px;color:red">MUSIC BOX ENDED</h1>`; // Placeholder se não tiver video da puppet
-    } else {
-        // Foxy Jump
-        content = `<img src="img/foxy.png" style="width:100%; height:100%; object-fit:cover;">`; 
-    }
-    
-    j.innerHTML = content;
-    
-    setTimeout(() => location.reload(), 5000);
+    // Mostra o susto
+    if(enemy === "BONNIE") jc.innerHTML = `<video autoplay playsinline src="video/bonnie_morte.mp4"></video>`;
+    else if(enemy === "FOXY") jc.innerHTML = `<img src="img/foxy.png" style="animation:shake 0.2s infinite">`;
+    else jc.innerHTML = `<h1 style="color:red;font-size:100px;margin-top:20%">MORTE POR ${enemy}</h1>`;
+
+    // Mostra a dica depois de 2 segundos (tempo do susto)
+    setTimeout(() => {
+        document.getElementById('death-cause').innerText = "MORTE POR: " + enemy;
+        document.getElementById('death-tip').innerText = TIPS[enemy] || "Tente sobreviver até as 6AM.";
+        document.getElementById('death-info').style.display = "block";
+    }, 2500);
 }
 
 </script>
-
 </body>
 </html>
