@@ -8,40 +8,97 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
-    /* ... SEUS ESTILOS ORIGINAIS ... */
-    body { margin: 0; padding: 0; background: linear-gradient(180deg, #0b0b0b, #111827); font-family: Arial, sans-serif; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; overflow: hidden; }
-    body::before { content: "👑 🎮 ⚡ 🟦 ⚔️ 🧱"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); font-size: 120px; letter-spacing: 40px; opacity: 0.05; white-space: nowrap; pointer-events: none; }
-    .container { width: 100%; max-width: 420px; padding: 20px; text-align: center; position: relative; z-index: 2; }
-    .profile-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid #facc15; box-shadow: 0 0 25px rgba(250, 204, 21, 0.6); margin-bottom: 15px; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #0b0b0b, #111827);
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "👑 🎮 ⚡ 🟦 ⚔️ 🧱";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      font-size: 120px;
+      letter-spacing: 40px;
+      opacity: 0.05;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .profile-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #facc15;
+      box-shadow: 0 0 25px rgba(250, 204, 21, 0.6);
+      margin-bottom: 15px;
+    }
+
     h1 { margin: 10px 0 5px; font-size: 26px; }
     p { margin-bottom: 25px; color: #cbd5e1; }
-    .link { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: #1f2933; margin: 12px 0; padding: 14px; border-radius: 14px; text-decoration: none; color: white; font-size: 16px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.05); }
+
+    .link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: #1f2933;
+      margin: 12px 0;
+      padding: 14px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: white;
+      font-size: 16px;
+      transition: 0.3s;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
     .link:hover { transform: scale(1.05); background: #334155; }
-    
-    /* BOTÃO ESPECIAL DO FNAF */
-    .fnaf-button {
+
+    /* BOTÃO NOVO DO JOGO */
+    .fnaf-btn {
       background: linear-gradient(135deg, #450a0a, #000);
       color: #ff4444;
       border: 1px solid #7f1d1d;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 2px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
     }
-    .fnaf-button:hover {
-      background: #7f1d1d;
-      color: white;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
-    }
+    .fnaf-btn:hover { background: #7f1d1d; color: #fff; }
 
-    /* RESTO DOS SEUS ESTILOS */
+    /* ESTILOS ORIGINAIS DOS SEUS BOTÕES */
     .sorteio { background: linear-gradient(135deg, #facc15, #f59e0b); color: #000; font-weight: bold; box-shadow: 0 0 25px rgba(250, 204, 21, 0.9); border: none; }
     .discord { background: linear-gradient(135deg, #5865F2, #3b44c3); font-weight: bold; }
     .apoiar { background: linear-gradient(135deg, #2563eb, #9333ea); font-weight: bold; }
     .live-pix { background: linear-gradient(135deg, #00ff99, #22c55e); color: #000; font-weight: bold; animation: pulse 1.4s infinite; }
+    
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
     .icons { margin-top: 25px; display: flex; justify-content: center; gap: 22px; font-size: 24px; }
     .icons a { text-decoration: none; transition: 0.3s; }
+    .icons a:hover { transform: scale(1.3); }
     .youtube { color: #ff0000; } .tiktok { color: #ffffff; } .instagram { color: #e1306c; } .twitch { color: #9146FF; } .discord-icon { color: #5865F2; }
   </style>
 </head>
@@ -52,18 +109,36 @@
     <h1>Gr Games 🎮👑</h1>
     <p>Clash Royale • Roblox • Minecraft • Anime 🔥</p>
 
-    <a class="link fnaf-button" href="fnaf/index.html">
+    <a class="link fnaf-btn" href="fnaf/index.html">
       🕹️ JOGAR: GR FNAF 2
-      <small style="font-size: 10px; opacity: 0.7;">Você aguenta até as 6h?</small>
+      <small style="font-size: 10px; font-weight: normal; opacity: 0.8;">O DESAFIO DAS 6 HORAS</small>
     </a>
 
     <a class="link sorteio" href="https://www.tiktok.com/coin?rc=7W4RBFUB" target="_blank">
       💰 MOEDAS EM DESCONTO
+      <small style="font-size: 13px; font-weight: normal;">recarregue pagando menos</small>
       <strong>VER OFERTAS</strong>
     </a>
 
     <a class="link" href="https://www.youtube.com/@grgamessyt" target="_blank">
       <i class="fa-brands fa-youtube youtube"></i> YouTube
+    </a>
+
+    <a class="link" href="https://www.tiktok.com/@gr_games_yt" target="_blank">
+      <i class="fa-brands fa-tiktok tiktok"></i> TikTok
+    </a>
+
+    <a class="link" href="https://www.instagram.com/guih_cabelinho/" target="_blank">
+      <i class="fa-brands fa-instagram instagram"></i> Instagram
+    </a>
+
+    <a class="link" href="https://www.twitch.tv/gr_games_yt" target="_blank">
+      <i class="fa-brands fa-twitch twitch"></i> Twitch
+    </a>
+
+    <a class="link live-pix" href="https://livepix.gg/grgamesyt" target="_blank">
+      💚 LIVE PIX
+      <small style="font-size: 12px; font-weight: normal;">💚 Sua mensagem aparece AO VIVO!</small>
     </a>
 
     <a class="link discord" href="https://discord.gg/Yy7j7JJjTu" target="_blank">
@@ -75,7 +150,13 @@
     </a>
 
     <div class="icons">
-      </div>
+      <a href="https://www.youtube.com/@grgamessyt" target="_blank" class="youtube"><i class="fa-brands fa-youtube"></i></a>
+      <a href="https://www.tiktok.com/@gr_games_yt" target="_blank" class="tiktok"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://www.instagram.com/guih_cabelinho/" target="_blank" class="instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.twitch.tv/gr_games_yt" target="_blank" class="twitch"><i class="fa-brands fa-twitch"></i></a>
+      <a href="https://discord.gg/Yy7j7JJjTu" target="_blank" class="discord-icon"><i class="fa-brands fa-discord"></i></a>
+    </div>
+
   </div>
 </body>
 </html>
